@@ -1,1 +1,1 @@
-# sonic203-calc
+calc
