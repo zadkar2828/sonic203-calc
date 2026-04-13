@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Sonic203 — If I Win</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0a; color: #fff;
+    font-family: sans-serif; min-height: 100vh;
+    padding: 28px 18px 48px;
+  }
+  .header { border-left: 3px solid #f0e040; padding-left: 14px; margin-bottom: 32px; }
+  .header-sub { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 4px; color: #555; margin-bottom: 4px; }
+  .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: #fff; letter-spacing: 2px; line-height: 1; }
+
+  .card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 14px; padding: 22px 18px; margin-bottom: 14px; }
+
+  .field { margin-bottom: 22px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 2px; color: #666; margin-bottom: 8px; display: block; }
+  .input-wrap { position: relative; }
+  .input-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #555; pointer-events: none; }
+  .input-suffix { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #555; pointer-events: none; }
+  input[type=number] {
+    width: 100%; background: #111; border: 1px solid #2a2a2a;
+    border-radius: 10px; color: #f0e040;
+    font-family: 'Bebas Neue', sans-serif; font-size: 26px;
+    padding: 16px 16px 16px 36px;
+    outline: none; letter-spacing: 1px; -webkit-appearance: none;
+  }
+  input[type=number].suffix-input { padding: 16px 44px 16px 16px; }
+  input[type=number]:focus { border-color: #f0e040; }
+  input[type=number]::placeholder { color: #333; }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  .toggle-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 2px; color: #666; margin-bottom: 12px; }
+  .toggle-row { display: flex; gap: 10px; }
+  .toggle-btn {
+    flex: 1; padding: 18px 10px; border-radius: 10px; cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px;
+    border: 1px solid #222; background: #0a0a0a; color: #444;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .toggle-btn.active { background: #1a1a00; border-color: #f0e040; color: #f0e040; }
+
+  .compare-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .compare-card { flex: 1; background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 18px 14px; }
+  .compare-card.winner { background: #0a1a0a; border-color: #2a6a2a; }
+  .compare-title { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 2px; color: #555; margin-bottom: 8px; }
+  .compare-title.winner { color: #4a8a4a; }
+  .compare-amount { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #ccc; margin-bottom: 10px; }
+  .compare-amount.winner { color: #6dda6d; }
+  .breakdown { border-top: 1px solid #1e1e1e; padding-top: 10px; }
+  .breakdown-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .breakdown-label { font-size: 11px; color: #555; }
+  .breakdown-value { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: #777; }
+  .breakdown-value.red { color: #a04040; }
+  .breakdown-value.green { color: #4a8a4a; }
+
+  .verdict-card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 12px; padding: 20px 18px; }
+  .verdict-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; letter-spacing: 3px; color: #555; margin-bottom: 10px; }
+  .verdict-text { font-size: 15px; color: #999; line-height: 1.8; }
+  .verdict-text .hl { color: #f0e040; }
+  .verdict-text .good { color: #6dda6d; }
+
+  .footer { text-align: center; margin-top: 28px; font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 3px; color: #2a2a2a; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-sub">Sonic203</div>
+  <div class="header-title">IF I<br>WIN 🏆</div>
+</div>
+
+<div class="card">
+  <div class="field">
+    <label class="field-label">Car Market Value</label>
+    <div class="input-wrap">
+      <span class="input-prefix">$</span>
+      <input type="number" id="carValue" placeholder="30000" oninput="update()" />
+    </div>
+  </div>
+  <div class="field">
+    <label class="field-label">Cash Offer</label>
+    <div class="input-wrap">
+      <span class="input-prefix">$</span>
+      <input type="number" id="cashOffer" placeholder="20000" oninput="update()" />
+    </div>
+  </div>
+  <div class="field">
+    <label class="field-label">Your Tax Rate</label>
+    <div class="input-wrap">
+      <input type="number" id="taxRate" placeholder="30" class="suffix-input" oninput="update()" />
+      <span class="input-suffix">%</span>
+    </div>
+  </div>
+  <div class="field">
+    <div class="toggle-label">IF YOU TAKE THE CAR...</div>
+    <div class="toggle-row">
+      <button class="toggle-btn active" id="btnKeep" onclick="setKeep(true)">🚗 KEEP IT</button>
+      <button class="toggle-btn" id="btnSell" onclick="setKeep(false)">💸 SELL IT</button>
+    </div>
+  </div>
+</div>
+
+<div class="compare-row">
+  <div class="compare-card" id="carCard">
+    <div class="compare-title" id="carTitle">TAKE THE CAR</div>
+    <div class="compare-amount" id="carAmount">—</div>
+    <div class="breakdown" id="carBreakdown" style="display:none">
+      <div class="breakdown-row">
+        <span class="breakdown-label">Market value</span>
+        <span class="breakdown-value" id="carMarket">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Tax owed</span>
+        <span class="breakdown-value red" id="carTax">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">After tax</span>
+        <span class="breakdown-value green" id="carNet">—</span>
+      </div>
+    </div>
+  </div>
+  <div class="compare-card" id="cashCard">
+    <div class="compare-title" id="cashTitle">TAKE CASH</div>
+    <div class="compare-amount" id="cashAmount">—</div>
+    <div class="breakdown" id="cashBreakdown" style="display:none">
+      <div class="breakdown-row">
+        <span class="breakdown-label">Cash offer</span>
+        <span class="breakdown-value" id="cashGross">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">Tax owed</span>
+        <span class="breakdown-value red" id="cashTax">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="breakdown-label">After tax</span>
+        <span class="breakdown-value green" id="cashNet">—</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="verdict-card">
+  <div class="verdict-label">VERDICT</div>
+  <div class="verdict-text" id="verdict">Enter your numbers above to see the verdict.</div>
+</div>
+
+<div class="footer">FOR ENTERTAINMENT ONLY</div>
+
+<script>
+  let keepCar = true;
+
+  function setKeep(val) {
+    keepCar = val;
+    document.getElementById("btnKeep").className = "toggle-btn" + (val ? " active" : "");
+    document.getElementById("btnSell").className = "toggle-btn" + (!val ? " active" : "");
+    update();
+  }
+
+  function fmt(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+
+  function update() {
+    const carValue  = parseFloat(document.getElementById("carValue").value);
+    const cashOffer = parseFloat(document.getElementById("cashOffer").value);
+    const taxRate   = parseFloat(document.getElementById("taxRate").value) / 100;
+
+    if (!carValue || !cashOffer || !taxRate) {
+      document.getElementById("carAmount").textContent  = "—";
+      document.getElementById("cashAmount").textContent = "—";
+      document.getElementById("carBreakdown").style.display  = "none";
+      document.getElementById("cashBreakdown").style.display = "none";
+      document.getElementById("verdict").innerHTML = "Enter your numbers above to see the verdict.";
+      return;
+    }
+
+    const carTax       = carValue  * taxRate;
+    const cashTax      = cashOffer * taxRate;
+    const carAfterTax  = carValue  - carTax;
+    const cashAfterTax = cashOffer - cashTax;
+    const carWins      = carAfterTax >= cashAfterTax;
+    const diff         = Math.abs(carAfterTax - cashAfterTax);
+    const taxPct       = Math.round(taxRate * 100);
+
+    // Car card
+    document.getElementById("carCard").className   = "compare-card" + (carWins ? " winner" : "");
+    document.getElementById("carTitle").className  = "compare-title" + (carWins ? " winner" : "");
+    document.getElementById("carAmount").className = "compare-amount" + (carWins ? " winner" : "");
+    document.getElementById("carAmount").textContent = fmt(carAfterTax);
+    document.getElementById("carBreakdown").style.display = "block";
+    document.getElementById("carMarket").textContent = fmt(carValue);
+    document.getElementById("carTax").textContent   = "-" + fmt(carTax) + " (" + taxPct + "%)";
+    document.getElementById("carNet").textContent   = fmt(carAfterTax);
+
+    // Cash card
+    document.getElementById("cashCard").className   = "compare-card" + (!carWins ? " winner" : "");
+    document.getElementById("cashTitle").className  = "compare-title" + (!carWins ? " winner" : "");
+    document.getElementById("cashAmount").className = "compare-amount" + (!carWins ? " winner" : "");
+    document.getElementById("cashAmount").textContent = fmt(cashAfterTax);
+    document.getElementById("cashBreakdown").style.display = "block";
+    document.getElementById("cashGross").textContent = fmt(cashOffer);
+    document.getElementById("cashTax").textContent  = "-" + fmt(cashTax) + " (" + taxPct + "%)";
+    document.getElementById("cashNet").textContent  = fmt(cashAfterTax);
+
+    // Verdict
+    let verdict = "";
+    if (carWins) {
+      verdict = `<span class="good">Take the car.</span> After taxes it's worth <span class="hl">${fmt(diff)}</span> more than the cash offer.`;
+      verdict += keepCar ? " And you get a free car on top of that." : ` Sell it and pocket the difference.`;
+    } else {
+      verdict = `<span class="good">Take the cash.</span> The offer nets you <span class="hl">${fmt(diff)}</span> more than the car after taxes. Don't leave money on the table.`;
+    }
+    document.getElementById("verdict").innerHTML = verdict;
+  }
+</script>
+</body>
+</html>
